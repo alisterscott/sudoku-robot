@@ -1,9 +1,9 @@
-Given /^a sudoku board:$/ do |board_string|
-	@board = create_board board_string
+Given /^a sudoku square group:$/ do |board_string|
+	@square_group = Sudoku::SquareGroup.new board_string
 end
 
-When /^I analyse the board$/ do
-	@analysis = Sudoku::BoardAnalyser.new @board
+When /^I analyse the square group$/ do
+	@analysis = Sudoku::GroupAnalyser.new @square_group
 end
 
 Then /^cell (\d+),(\d+) can contain an? (\d+) or an? (\d+)$/ do |row, col, val1, val2|
