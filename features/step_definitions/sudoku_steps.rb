@@ -1,5 +1,13 @@
-Given /^a sudoku square group:$/ do |board_string|
-	@square_group = Sudoku::SquareGroup.new board_string
+Given /^a sudoku square group:$/ do |string|
+	@square_group = Sudoku::SquareGroup.new string
+end
+
+Given /^a sudoku straight group$/ do |string|
+  @straight_group = Sudoku::StraightGroup.new string
+end
+
+When /^I analyse the straight group$/ do
+	@analysis = Sudoku::GroupAnalyser.new @straight_group
 end
 
 When /^I analyse the square group$/ do

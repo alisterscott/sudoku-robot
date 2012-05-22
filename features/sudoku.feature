@@ -19,3 +19,20 @@ Scenario: Can work out possible values for a cell in a horizontal straight group
   When I analyse the straight group
   Then cell 0,0 can contain a 1 or a 2
   And cell 0,1 can contain a 1 or a 2
+
+Scenario: Can work out possible values for a cell in a vertical straight group
+  Given a sudoku straight group
+  """
+  9
+  8
+  7
+  _
+  _
+  1
+  2
+  3
+  4
+  """
+  When I analyse the straight group
+  Then cell 3,0 can contain a 5 or a 6
+  And cell 4,0 can contain a 5 or a 6
