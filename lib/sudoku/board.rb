@@ -6,7 +6,6 @@ class Sudoku::Board
   COL_COUNT = 9
   GROUPS_COUNT = 9
   attr_reader :cells, :groups, :rows, :cols
-  #attr_reader :row_count, :col_count
 
   def initialize grid
     @cells = []
