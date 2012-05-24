@@ -20,6 +20,7 @@ class Sudoku::Board
     generate_groups
     generate_rows
     generate_cols
+    generate_possible_values_from_groups
   end
 
   def each
@@ -52,4 +53,14 @@ class Sudoku::Board
       @cols << @cells.select{ |cell| cell.col == index }
     end
   end
+
+  def generate_possible_values_from_groups
+    @groups.each_with_index do |group, group_index|
+      group.each_with_index do |cell, cell_index|
+        if cell.value != "_"
+          group.select{|c| c != cell}.each {|c| c.possible_values -= [cell.value] }
+        end
+      end
+    end
+ end
 end
