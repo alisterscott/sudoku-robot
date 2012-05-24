@@ -19,9 +19,6 @@ class Sudoku::Board
     generate_groups
     generate_rows
     generate_cols
-    generate_possible_values_from @groups
-    generate_possible_values_from @rows
-    generate_possible_values_from @cols
   end
 
   def each
@@ -41,6 +38,7 @@ class Sudoku::Board
     GROUPS_COUNT.times do |index|
       @groups << @cells.select{ |cell| cell.group == index }
     end
+    generate_possible_values_from @groups
   end
 
   def generate_rows
@@ -49,6 +47,7 @@ class Sudoku::Board
     ROW_COUNT.times do |index|
       @rows << @cells.select{ |cell| cell.row == index }
     end
+    generate_possible_values_from @rows
   end
 
   def generate_cols
@@ -57,6 +56,7 @@ class Sudoku::Board
     COL_COUNT.times do |index|
       @cols << @cells.select{ |cell| cell.col == index }
     end
+    generate_possible_values_from @cols
   end
 
   def generate_possible_values_from collection
