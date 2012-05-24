@@ -21,6 +21,14 @@ describe Sudoku::Board do
     board.count.should == 81
   end
 
+  it 'should provide an unknown cell count' do
+   board.unknown_cell_count.should == 76
+  end
+
+  it 'should know whether it is solved' do
+    board.should_not be_solved
+  end
+
   it 'should be create a whole bunch of cells' do
     board.cells.first.row.should == 0
     board.cells[8].col.should == 8

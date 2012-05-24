@@ -31,6 +31,14 @@ class Sudoku::Board
     @cells.select {|cell| cell.possible_values.count == 1}
   end
 
+  def unknown_cell_count
+    @cells.select{|cell| cell.value == "_"}.count
+  end
+
+  def solved?
+    unknown_cell_count == 0
+  end
+
   private
   def generate_groups
     # Create groups for easy accessibility
