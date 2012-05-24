@@ -5,7 +5,7 @@ class Sudoku::Board
   ROW_COUNT = 9
   COL_COUNT = 9
   GROUPS_COUNT = 9
-  attr_reader :cells, :groups
+  attr_reader :cells, :groups, :rows
   #attr_reader :row_count, :col_count
 
   def initialize grid
@@ -17,6 +17,19 @@ class Sudoku::Board
         @cells << Sudoku::Cell.new(row_index, col_index, cell)
       end
     end
+    generate_groups
+    generate_rows
+    generate_cols
+  end
+
+  def each
+    @cells.each do |cell|
+      yield cell
+    end
+  end
+
+  private
+  def generate_groups
     # Create groups for easy accessibility
     @groups = []
     GROUPS_COUNT.times do |index|
@@ -24,9 +37,19 @@ class Sudoku::Board
     end
   end
 
-  def each
-    @cells.each do |cell|
-      yield cell
+  def generate_rows
+    # Create rows for easy accessibility
+    @rows = []
+    ROW_COUNT.times do |index|
+      @rows << @cells.select{ |cell| cell.row == index }
+    end
+  end
+
+  def generate_cols
+    # Create cols for easy accessibility
+    @cols = []
+    COL_COUNT.times do |index|
+      @cols << @cells.select{ |cell| cell.col == index }
     end
   end
 end
