@@ -31,6 +31,10 @@ class Sudoku::Board
     end
   end
 
+  def known_values
+    @cells.select {|cell| cell.possible_values.count == 1}
+  end
+
   private
   def generate_groups
     # Create groups for easy accessibility
