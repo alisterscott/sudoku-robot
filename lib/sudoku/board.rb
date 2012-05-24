@@ -20,8 +20,9 @@ class Sudoku::Board
     generate_groups
     generate_rows
     generate_cols
-    generate_possible_values_from_groups
-    generate_possible_values_from_rows
+    generate_possible_values_from @groups
+    generate_possible_values_from @rows
+    generate_possible_values_from @cols
   end
 
   def each
@@ -55,19 +56,14 @@ class Sudoku::Board
     end
   end
 
-  def generate_possible_values_from_groups
-    @groups.each do |group|
-      remove_own_value_from_others_possible_values group
+  def generate_possible_values_from collection
+    collection.each do |member|
+      remove_own_value_from_others_possible_values member
     end
   end
 
-  def generate_possible_values_from_rows
-    @rows.each do |row|
-      remove_own_value_from_others_possible_values row
-    end
-  end
 
-  def remove_own_value_from_others_possible_values array_cells
+   def remove_own_value_from_others_possible_values array_cells
     array_cells.each do |cell|
       if cell.value != "_"
         array_cells.select{|c| c != cell}.each {|c| c.possible_values -= [cell.value] }
