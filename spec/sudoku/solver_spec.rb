@@ -31,19 +31,20 @@ describe Sudoku::Solver do
                      4 _ _ _ _ _ _ _ 5        '
     solver = Sudoku::Solver.new board_string
     solver.should_not be_solved
+    solver.moves.count.should == 0
     puts solver.board.to_s
   end
 
-  it 'should be able to solve a difficult board' do
-    board_string = ' _ _ 6 _ 2 _ _ 7 _
-                     2 _ _ 6 _ 4 _ 3 _
-                     _ _ _ _ 9 3 4 _ 2
-                     _ _ 8 _ _ _ _ 4 7
-                     _ _ _ _ _ _ _ _ _
-                     7 6 _ _ _ _ 1 _ _
-                     4 _ 3 8 6 _ _ _ _
-                     _ 7 _ 1 _ 9 _ _ 8
-                     _ 8 _ _ 3 _ 6 _ _        '
+  it 'should be able to solve a medium board' do
+    board_string = '_ _ _ _ _ _ 7 4 5
+                    _ 2 9 _ _ 5 3 _ _
+                    _ 7 _ _ _ 8 _ _ _
+                    _ _ _ 9 8 _ 4 5 7
+                    _ 8 _ _ 5 _ _ 3 _
+                    4 5 2 _ 3 7 _ _ _
+                    _ _ _ 1 _ _ _ 9 _
+                    _ _ 3 5 _ _ 2 7 _
+                    7 4 5 _ _ _ _ _ _       '
     solver = Sudoku::Solver.new board_string
     puts solver.board.to_s
     solver.should be_solved

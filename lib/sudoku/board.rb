@@ -41,13 +41,15 @@ class Sudoku::Board
   end
 
   def set_known_values
-    known_values.each do |cell|
+    kvs = known_values
+    kvs.each do |cell|
       cell.value = cell.possible_values.first
       cell.possible_values = []
     end
     generate_possible_values_from @groups
     generate_possible_values_from @rows
     generate_possible_values_from @cols
+    kvs
   end
 
   def unknown_cell_count

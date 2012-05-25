@@ -28,4 +28,15 @@ describe Sudoku::Cell do
     cell = Sudoku::Cell.new 8,8,"_"
     cell.group.should == 8
   end
+
+  it 'should know its index in the grid' do
+    cell = Sudoku::Cell.new 0,0,"_"
+    cell.grid_index.should == 0
+  end
+
+  it 'should know its index in the grid' do
+    cell = Sudoku::Cell.new 8,8,"_"
+    cell.grid_index.should == 80
+  end
+
 end
