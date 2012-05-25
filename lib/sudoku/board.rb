@@ -43,6 +43,7 @@ class Sudoku::Board
   def set_known_values
     known_values.each do |cell|
       cell.value = cell.possible_values.first
+      cell.possible_values = []
     end
     generate_possible_values_from @groups
     generate_possible_values_from @rows

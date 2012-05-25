@@ -45,7 +45,7 @@ describe Sudoku::Solver do
                      _ 7 _ 1 _ 9 _ _ 8
                      _ 8 _ _ 3 _ 6 _ _        '
     solver = Sudoku::Solver.new board_string
-    solver.should be_solved
     puts solver.board.to_s
+    solver.should be_solved
   end
 end
