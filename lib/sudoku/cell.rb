@@ -4,8 +4,8 @@ class Sudoku::Cell
   BOARD_SIZE = 3
   ALL_POSSIBLE_VALUES = Set.new ["1","2","3","4","5","6","7","8","9"]
 
-  attr_reader :row, :col, :value, :group
-  attr_accessor :possible_values
+  attr_reader :row, :col, :group
+  attr_accessor :possible_values, :value
 
   def initialize row, col, value
     @row = row

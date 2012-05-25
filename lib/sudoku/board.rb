@@ -27,8 +27,26 @@ class Sudoku::Board
     end
   end
 
+  def to_s
+    string = ""
+    @cells.each do |cell|
+      string << "\n" if cell.col == 0
+      string << cell.value << ' '
+    end
+    string
+  end
+
   def known_values
     @cells.select {|cell| cell.possible_values.count == 1}
+  end
+
+  def set_known_values
+    known_values.each do |cell|
+      cell.value = cell.possible_values.first
+    end
+    generate_possible_values_from @groups
+    generate_possible_values_from @rows
+    generate_possible_values_from @cols
   end
 
   def unknown_cell_count
@@ -74,7 +92,7 @@ class Sudoku::Board
   end
 
 
-   def remove_own_value_from_others_possible_values array_cells
+  def remove_own_value_from_others_possible_values array_cells
     array_cells.each do |cell|
       if cell.value != "_"
         array_cells.select{|c| c != cell}.each {|c| c.possible_values -= [cell.value] }
