@@ -60,7 +60,6 @@ describe Sudoku::Solver do
                     _ _ 3 5 _ _ 2 7 _
                     7 4 5 _ _ _ _ _ _       '
     solver = Sudoku::Solver.new board_string
-    puts solver.board.to_s
     solver.should be_solved
   end
 end

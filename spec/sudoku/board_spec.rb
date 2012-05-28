@@ -133,4 +133,18 @@ describe 'Solving Sudoku::Board' do
     board.rows[1][7].possible_values.to_a.should == ["2"]
   end
 
+  it 'should know about advanced cross-hatching' do
+    board_string = ' _ _ _ _ _ _ 2 _ _
+                     _ _ _ 9 _ _ _ _ _
+                     _ _ _ 3 6 _ _ 4 5
+                     _ _ _ _ _ _ _ _ _
+                     _ _ 2 _ _ _ 9 _ _
+                     _ _ 9 _ _ _ _ _ _
+                     8 9 _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _     '
+    board = Sudoku::Board.new board_string
+    board.known_values
+    board.rows[2][0].possible_values.to_a.should == ["9"]
+  end
 end

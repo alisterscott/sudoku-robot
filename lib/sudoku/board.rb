@@ -16,6 +16,7 @@ class Sudoku::Board
         @cells << Sudoku::Cell.new(row_index, col_index, cell)
       end
     end
+    create_groups_rows_and_cols
     generate_groups
     generate_rows
     generate_cols
@@ -71,30 +72,32 @@ class Sudoku::Board
   end
 
   private
-  def generate_groups
-    # Create groups for easy accessibility
+
+  def create_groups_rows_and_cols
+    # Create groups, rows and cols for easy accessibility
     @groups = []
+    @rows = []
+    @cols = []
     GROUPS_COUNT.times do |index|
       @groups << @cells.select{ |cell| cell.group == index }
     end
+    ROW_COUNT.times do |index|
+      @rows << @cells.select{ |cell| cell.row == index }
+    end
+    COL_COUNT.times do |index|
+      @cols << @cells.select{ |cell| cell.col == index }
+    end
+  end
+
+  def generate_groups
     generate_possible_values_from @groups
   end
 
   def generate_rows
-    # Create rows for easy accessibility
-    @rows = []
-    ROW_COUNT.times do |index|
-      @rows << @cells.select{ |cell| cell.row == index }
-    end
     generate_possible_values_from @rows
   end
 
   def generate_cols
-    # Create cols for easy accessibility
-    @cols = []
-    COL_COUNT.times do |index|
-      @cols << @cells.select{ |cell| cell.col == index }
-    end
     generate_possible_values_from @cols
   end
 
