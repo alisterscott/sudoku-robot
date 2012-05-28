@@ -37,6 +37,16 @@ class Sudoku::Board
   end
 
   def known_values
+    @groups.each do |group|
+      group.each do |cell|
+        cell.possible_values.each do |possible_value|
+          if group.select {|c| c != cell}.select {|ce| ce.possible_values.include? possible_value}.count == 0
+            cell.possible_values = Set.new [possible_value]
+            next
+          end
+        end
+      end
+    end
     @cells.select {|cell| cell.possible_values.count == 1}
   end
 

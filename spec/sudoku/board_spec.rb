@@ -117,18 +117,20 @@ describe 'Solving Sudoku::Board' do
     board.known_values.first.possible_values.to_a.should == ["1"]
   end
 
-  it 'should be able to see a simple column missing number' do
-    board_string = ' _ 1 _ _ _ _ 2 8 _
-                     _ _ 8 _ _ 2 _ 3 _
-                     5 2 _ _ 8 _ 7 _ 6
-                     7 4 _ 9 _ 5 _ 6 1
-                     _ _ _ 1 _ 4 _ _ _
-                     9 5 _ 2 _ 8 _ 7 3
-                     4 _ 7 _ 1 _ _ 5 2
-                     _ 9 _ 6 _ _ 3 _ _
-                     _ 8 6 _ _ _ _ 4 _     '
+  it 'should be able find known values from a unique known value' do
+    board_string = ' _ _ _ 2 6 8 _ _ _
+                     _ _ _ _ _ _ 5 _ 8
+                     8 2 _ 1 _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _     '
     board = Sudoku::Board.new board_string
-    board.known_values.count.should == 9
+    board.rows[1][7].possible_values.to_a.should == ["1", "2", "3", "4", "6", "7", "9"]
+    board.known_values.count.should == 1
+    board.rows[1][7].possible_values.to_a.should == ["2"]
   end
 
 end

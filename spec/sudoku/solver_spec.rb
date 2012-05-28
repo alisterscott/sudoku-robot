@@ -16,7 +16,6 @@ describe Sudoku::Solver do
                      _ 8 6 _ _ _ _ 4 _     '
     solver = Sudoku::Solver.new board_string
     solver.should be_solved
-    puts solver.board.to_s
   end
 
   it 'should not be able to solve an unsolvable board' do
@@ -32,7 +31,22 @@ describe Sudoku::Solver do
     solver = Sudoku::Solver.new board_string
     solver.should_not be_solved
     solver.moves.count.should == 0
-    puts solver.board.to_s
+  end
+
+
+  it 'should not be able to solve a board but only able find known values from a unique known value' do
+    board_string = ' _ _ _ 2 6 8 _ _ _
+                     _ _ _ _ _ _ 5 _ 8
+                     8 2 _ 1 _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ _ _ _ _ _     '
+    solver = Sudoku::Solver.new board_string
+    solver.should_not be_solved
+    solver.moves.count.should == 1
   end
 
   it 'should be able to solve a medium board' do
