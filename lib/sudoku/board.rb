@@ -17,9 +17,7 @@ class Sudoku::Board
       end
     end
     create_groups_rows_and_cols
-    generate_groups
-    generate_rows
-    generate_cols
+    set_possible_values
   end
 
   def each
@@ -27,6 +25,27 @@ class Sudoku::Board
       yield cell
     end
   end
+
+  def set_possible_values
+    set_possible_values_from @groups
+    set_possible_values_from @rows
+    set_possible_values_from @cols
+    set_possible_values_where_value_is_unique_in_group
+  end
+
+  def set_possible_values_where_value_is_unique_in_group
+    @groups.each do |group|
+      group.each do |cell|
+        cell.possible_values.each do |possible_value|
+          if group.select {|c| c != cell}.select {|ce| ce.possible_values.include? possible_value}.count == 0
+            cell.possible_values = Set.new [possible_value]
+            next
+          end
+        end
+      end
+    end
+  end
+
 
   def to_s
     string = ""
@@ -38,16 +57,6 @@ class Sudoku::Board
   end
 
   def known_values
-    @groups.each do |group|
-      group.each do |cell|
-        cell.possible_values.each do |possible_value|
-          if group.select {|c| c != cell}.select {|ce| ce.possible_values.include? possible_value}.count == 0
-            cell.possible_values = Set.new [possible_value]
-            next
-          end
-        end
-      end
-    end
     @cells.select {|cell| cell.possible_values.count == 1}
   end
 
@@ -57,9 +66,9 @@ class Sudoku::Board
       cell.value = cell.possible_values.first
       cell.possible_values = []
     end
-    generate_possible_values_from @groups
-    generate_possible_values_from @rows
-    generate_possible_values_from @cols
+    set_possible_values_from @groups
+    set_possible_values_from @rows
+    set_possible_values_from @cols
     kvs
   end
 
@@ -89,24 +98,11 @@ class Sudoku::Board
     end
   end
 
-  def generate_groups
-    generate_possible_values_from @groups
-  end
-
-  def generate_rows
-    generate_possible_values_from @rows
-  end
-
-  def generate_cols
-    generate_possible_values_from @cols
-  end
-
-  def generate_possible_values_from collection
+  def set_possible_values_from collection
     collection.each do |member|
       remove_own_value_from_others_possible_values member
     end
   end
-
 
   def remove_own_value_from_others_possible_values array_cells
     array_cells.each do |cell|

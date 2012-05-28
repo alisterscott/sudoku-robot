@@ -128,7 +128,6 @@ describe 'Solving Sudoku::Board' do
                      _ _ _ _ _ _ _ _ _
                      _ _ _ _ _ _ _ _ _     '
     board = Sudoku::Board.new board_string
-    board.rows[1][7].possible_values.to_a.should == ["1", "2", "3", "4", "6", "7", "9"]
     board.known_values.count.should == 1
     board.rows[1][7].possible_values.to_a.should == ["2"]
   end
