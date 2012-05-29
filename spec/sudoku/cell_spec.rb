@@ -1,6 +1,5 @@
 $: << File.dirname(__FILE__)+'/../../lib'
 
-require 'sudoku'
 require 'sudoku/cell'
 
 describe Sudoku::Cell do

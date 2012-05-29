@@ -1,6 +1,5 @@
 $: << File.dirname(__FILE__)+'/../../lib'
 
-require 'sudoku'
 require 'sudoku/board'
 require 'sudoku/cell'
 
@@ -30,6 +29,11 @@ describe Sudoku::Board do
     board.should_not be_solved
   end
 
+  it 'should provide a cell_at method' do
+    board.cell_at(0,0).value.should == "1"
+    board.cell_at(8,8).value.should == "5"
+  end
+
   it 'should be create a whole bunch of cells' do
     board.cells.first.row.should == 0
     board.cells[8].col.should == 8
@@ -56,110 +60,68 @@ describe Sudoku::Board do
     board.cols.last.last.value.should == "5"
   end
 
-  it 'should be able to determine what values a cell can be by looking at its group' do
-    board.groups[4].first.possible_values.to_a.should == ["1","2","4","5","6","7","8","9"]
+  it 'should be enumerable' do
+    board.each{|cell| cell.class == Sudoku::Cell }
   end
 
-  it 'should be able to determine what values a cell can be by looking at its row' do
-    board.rows.first[1].possible_values.to_a.should == ["3","4","5","6","7","8","9"]
+  it 'provides a to string method' do
+    board.to_s.should == "\n1 _ _ _ _ _ _ _ 2 \n_ _ _ _ _ _ _ _ _ \n_ _ _ _ _ _ _ _ _ \n_ _ _ _ _ _ _ _ _ \n_ _ _ _ 3 _ _ _ _ \n_ _ _ _ _ _ _ _ _ \n_ _ _ _ _ _ _ _ _ \n_ _ _ _ _ _ _ _ _ \n4 _ _ _ _ _ _ _ 5 "
   end
 
-  it 'should be able to determine what values a cell can be by looking at its col' do
-    board.cols.first[1].possible_values.to_a.should == ["2","3","5","6","7","8","9"]
-  end
-end
-
-describe 'Solving Sudoku::Board' do
-  it 'should be able to see a simple group missing number' do
-    board_string = ' 1 2 3 _ _ _ _ _ _
-                     4 5 6 _ _ _ _ _ _
-                     7 8 _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _     '
-    board = Sudoku::Board.new board_string
-    board.groups.first.last.possible_values.to_a.should == ["9"]
-    board.known_values.count == 1
-    board.known_values.first.possible_values.to_a.should == ["9"]
+  it 'provides group neighbours of cells' do
+    board.group_neighbours_of_cell(board.cell_at(1,1)).count.should == 8
+    board.group_neighbours_of_cell(board.cell_at(1,1)).first.value.should == "1"
+    board.group_neighbours_of_cell(board.cell_at(1,1)).last.value.should == "_"
   end
 
-  it 'should be able to see a simple row missing number' do
-    board_string = ' 1 2 3 4 5 6 7 8 _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _     '
-    board = Sudoku::Board.new board_string
-    board.rows.first.last.possible_values.to_a.should == ["9"]
-    board.known_values.count == 1
-    board.known_values.first.possible_values.to_a.should == ["9"]
+  it 'provides row neighbours of cells' do
+    board.row_neighbours_of_cell(board.cell_at(0,4)).count.should == 8
+    board.row_neighbours_of_cell(board.cell_at(0,4)).first.value.should == "1"
+    board.row_neighbours_of_cell(board.cell_at(0,4)).last.value.should == "2"
   end
 
-  it 'should be able to see a simple column missing number' do
-    board_string = ' _ _ _ _ _ _ _ _ _
-                     2 _ _ _ _ _ _ _ _
-                     3 _ _ _ _ _ _ _ _
-                     4 _ _ _ _ _ _ _ _
-                     5 _ _ _ _ _ _ _ _
-                     6 _ _ _ _ _ _ _ _
-                     7 _ _ _ _ _ _ _ _
-                     8 _ _ _ _ _ _ _ _
-                     9 _ _ _ _ _ _ _ _     '
-    board = Sudoku::Board.new board_string
-    board.cols.first.first.possible_values.to_a.should == ["1"]
-    board.known_values.count == 1
-    board.known_values.first.possible_values.to_a.should == ["1"]
+  it 'provides col neighbours of cells' do
+    board.col_neighbours_of_cell(board.cell_at(4,0)).count.should == 8
+    board.col_neighbours_of_cell(board.cell_at(4,0)).first.value.should == "1"
+    board.col_neighbours_of_cell(board.cell_at(4,0)).last.value.should == "4"
   end
 
-  it 'should be able find known values from a unique known value' do
-    board_string = ' _ _ _ 2 6 8 _ _ _
-                     _ _ _ _ _ _ 5 _ 8
-                     8 2 _ 1 _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _     '
-    board = Sudoku::Board.new board_string
-    board.known_values.count.should == 1
-    board.rows[1][7].possible_values.to_a.should == ["2"]
+  it 'provides unset row neighbours of cell' do
+    board.unset_row_neighbours_of_cell(board.cell_at(0,4)).count.should == 6
+    board.unset_row_neighbours_of_cell(board.cell_at(0,4)).each{|cell|cell.value.should == "_"}
   end
 
-  it 'should know about advanced cross-hatching' do
-    board_string = ' _ _ _ _ _ _ 2 _ _
-                     _ _ _ 9 _ _ _ _ _
-                     _ _ _ 3 6 _ _ 4 5
-                     _ _ _ _ _ _ _ _ _
-                     _ _ 2 _ _ _ 9 _ _
-                     _ _ 9 _ _ _ _ _ _
-                     8 9 _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _     '
-    board = Sudoku::Board.new board_string
-    board.known_values
-    board.rows[2][0].possible_values.to_a.should == ["9"]
+  it 'provides unset col neighbours of cell' do
+    board.unset_col_neighbours_of_cell(board.cell_at(4,0)).count.should == 6
+    board.unset_col_neighbours_of_cell(board.cell_at(4,0)).each{|cell|cell.value.should == "_"}
   end
 
-  it 'should know about advanced cross-hatching when rotated' do
-    board_string = ' _ _ 8 _ _ _ _ _ _
-                     _ _ 9 _ _ _ _ _ _
-                     _ _ _ 9 _ _ _ _ _
-                     _ _ _ _ _ _ 3 9 _
-                     _ _ _ _ _ _ 6 _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ 9 _ _ _ 2
-                     _ _ _ _ _ _ 4 _ _
-                     _ _ _ _ _ _ 5 _ _     '
-    board = Sudoku::Board.new board_string
-    board.known_values
-    board.rows[0][6].possible_values.to_a.should == ["9"]
+  it 'provides unset group neighbours of cell' do
+    board.unset_group_neighbours_of_cell(board.cell_at(1,1)).count.should == 7
+    board.unset_group_neighbours_of_cell(board.cell_at(1,1)).each{|cell|cell.value.should == "_"}
+  end
+
+  it 'provides unset group neighbours of cell in same row' do
+    board.unset_group_neighbours_in_same_row(board.cell_at(0,1)).count.should == 1
+    board.unset_group_neighbours_in_same_row(board.cell_at(0,1)).first.value.should == "_"
+    board.unset_group_neighbours_in_same_row(board.cell_at(0,1)).first.row.should == 0
+  end
+
+  it 'provides unset group neighbours of cell not in same row' do
+    board.unset_group_neighbours_not_in_same_row(board.cell_at(0,1)).count.should == 6
+    board.unset_group_neighbours_not_in_same_row(board.cell_at(0,1)).each{|cell|cell.value.should == "_"}
+    board.unset_group_neighbours_not_in_same_row(board.cell_at(0,1)).each{|cell|cell.row.should_not == 0}
+  end
+
+  it 'provides unset group neighbours of cell in same col' do
+    board.unset_group_neighbours_in_same_col(board.cell_at(1,0)).count.should == 1
+    board.unset_group_neighbours_in_same_col(board.cell_at(1,0)).first.value.should == "_"
+    board.unset_group_neighbours_in_same_col(board.cell_at(1,0)).first.col.should == 0
+  end
+
+  it 'provides unset group neighbours of cell not in same col' do
+    board.unset_group_neighbours_not_in_same_col(board.cell_at(1,0)).count.should == 6
+    board.unset_group_neighbours_not_in_same_col(board.cell_at(1,0)).each{|cell|cell.value.should == "_"}
+    board.unset_group_neighbours_not_in_same_col(board.cell_at(1,0)).each{|cell|cell.col.should_not == 0}
   end
 end

@@ -1,6 +1,5 @@
 $: << File.dirname(__FILE__)+'/../../lib'
 
-require 'sudoku'
 require 'sudoku/solver'
 
 describe Sudoku::Solver do
