@@ -58,8 +58,16 @@ class Sudoku::Board
     @rows[cell.row].select{|c| c != cell}
   end
 
+  def col_neighbours_of_cell cell
+   @cols[cell.col].select{|c| c != cell}
+  end
+
   def unset_row_neighbours_of_cell cell
     row_neighbours_of_cell(cell).select{|c| c.value == "_"}
+  end
+
+  def unset_col_neighbours_of_cell cell
+    col_neighbours_of_cell(cell).select{|c| c.value == "_"}
   end
 
   def unset_group_neighbours_of_cell cell
@@ -74,16 +82,36 @@ class Sudoku::Board
     unset_group_neighbours_of_cell(cell).select{|c| c.row != cell.row}
   end
 
+  def unset_group_neighbours_in_same_col cell
+    unset_group_neighbours_of_cell(cell).select{|c| c.col == cell.col}
+  end
+
+  def unset_group_neighbours_not_in_same_col cell
+    unset_group_neighbours_of_cell(cell).select{|c| c.col != cell.col}
+  end
+
   def all_unset_group_neighbours_in_same_row_share_possible_value? cell, possible_value
     unset_group_neighbours_in_same_row(cell).select{|c| c.possible_values.include? possible_value}.count == unset_group_neighbours_in_same_row(cell).count
+  end
+
+  def all_unset_group_neighbours_in_same_col_share_possible_value? cell, possible_value
+      unset_group_neighbours_in_same_col(cell).select{|c| c.possible_values.include? possible_value}.count == unset_group_neighbours_in_same_col(cell).count
   end
 
   def all_unset_group_neighbours_not_in_same_row_dont_have_possible_value? cell, possible_value
     unset_group_neighbours_not_in_same_row(cell).select{|c| c.possible_values.include? possible_value}.count == 0
   end
 
+  def all_unset_group_neighbours_not_in_same_col_dont_have_possible_value? cell, possible_value
+    unset_group_neighbours_not_in_same_col(cell).select{|c| c.possible_values.include? possible_value}.count == 0
+  end
+
   def unset_row_neighbours_not_in_group cell
     unset_row_neighbours_of_cell(cell).select{|c| c.group != cell.group}
+  end
+
+  def unset_col_neighbours_not_in_group cell
+    unset_col_neighbours_of_cell(cell).select{|c| c.group != cell.group}
   end
 
   def set_possible_values_from_intersecting_rows_in_groups
@@ -93,6 +121,11 @@ class Sudoku::Board
         cell.possible_values.each do |possible_value|
           if all_unset_group_neighbours_in_same_row_share_possible_value?(cell, possible_value) and all_unset_group_neighbours_not_in_same_row_dont_have_possible_value?(cell, possible_value)
             unset_row_neighbours_not_in_group(cell).each do |cell|
+              cell.possible_values.delete possible_value
+            end
+          end
+          if all_unset_group_neighbours_in_same_col_share_possible_value?(cell, possible_value) and all_unset_group_neighbours_not_in_same_col_dont_have_possible_value?(cell, possible_value)
+            unset_col_neighbours_not_in_group(cell).each do |cell|
               cell.possible_values.delete possible_value
             end
           end

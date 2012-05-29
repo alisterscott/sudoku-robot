@@ -147,4 +147,19 @@ describe 'Solving Sudoku::Board' do
     board.known_values
     board.rows[2][0].possible_values.to_a.should == ["9"]
   end
+
+  it 'should know about advanced cross-hatching when rotated' do
+    board_string = ' _ _ 8 _ _ _ _ _ _
+                     _ _ 9 _ _ _ _ _ _
+                     _ _ _ 9 _ _ _ _ _
+                     _ _ _ _ _ _ 3 9 _
+                     _ _ _ _ _ _ 6 _ _
+                     _ _ _ _ _ _ _ _ _
+                     _ _ _ _ 9 _ _ _ 2
+                     _ _ _ _ _ _ 4 _ _
+                     _ _ _ _ _ _ 5 _ _     '
+    board = Sudoku::Board.new board_string
+    board.known_values
+    board.rows[0][6].possible_values.to_a.should == ["9"]
+  end
 end
