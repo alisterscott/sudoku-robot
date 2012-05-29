@@ -34,21 +34,6 @@ describe Sudoku::Solver do
   end
 
 
-  it 'should not be able to solve a board but only able find known values from a unique known value' do
-    board_string = ' _ _ _ 2 6 8 _ _ _
-                     _ _ _ _ _ _ 5 _ 8
-                     8 2 _ 1 _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _
-                     _ _ _ _ _ _ _ _ _     '
-    solver = Sudoku::Solver.new board_string
-    solver.should_not be_solved
-    solver.moves.count.should == 1
-  end
-
   it 'should be able to solve a medium board' do
     board_string = '_ _ _ _ _ _ 7 4 5
                     _ 2 9 _ _ 5 3 _ _
@@ -58,8 +43,23 @@ describe Sudoku::Solver do
                     4 5 2 _ 3 7 _ _ _
                     _ _ _ 1 _ _ _ 9 _
                     _ _ 3 5 _ _ 2 7 _
-                    7 4 5 _ _ _ _ _ _       '
+                    7 4 5 _ _ _ _ _ _ '
     solver = Sudoku::Solver.new board_string
     solver.should be_solved
   end
+
+  it 'should be able to solve a hard board' do
+    board_string = '1 _ _ 8 9 _ _ _ 5
+                    _ _ 3 _ _ _ _ _ _
+                    5 8 _ _ _ 6 2 _ _
+                    _ _ 9 _ _ 4 _ _ _
+                    _ 2 5 _ _ _ 4 3 _
+                    _ _ _ 9 _ _ 7 _ _
+                    _ _ 2 7 _ _ _ 5 6
+                    _ _ _ _ _ _ 8 _ _
+                    3 _ _ _ 1 5 _ _ 4 '
+    solver = Sudoku::Solver.new board_string
+    solver.should be_solved
+  end
+
 end

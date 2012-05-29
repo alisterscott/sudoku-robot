@@ -31,10 +31,7 @@ class Sudoku::Board
     set_possible_values_from @rows
     set_possible_values_from @cols
     set_possible_values_where_value_is_unique_in_group
-    set_possible_values_from_intersecting_rows_in_groups
-    set_possible_values_from @groups
-    set_possible_values_from @rows
-    set_possible_values_from @cols
+    set_possible_values_from_intersecting_rows_and_cols_in_groups
   end
 
   def set_possible_values_where_value_is_unique_in_group
@@ -114,7 +111,7 @@ class Sudoku::Board
     unset_col_neighbours_of_cell(cell).select{|c| c.group != cell.group}
   end
 
-  def set_possible_values_from_intersecting_rows_in_groups
+  def set_possible_values_from_intersecting_rows_and_cols_in_groups
     @groups.each do |group|
       group.each do |cell|
         next unless cell.value == "_"
