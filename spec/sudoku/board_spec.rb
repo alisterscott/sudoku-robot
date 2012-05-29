@@ -2,6 +2,7 @@ $: << File.dirname(__FILE__)+'/../../lib'
 
 require 'sudoku'
 require 'sudoku/board'
+require 'sudoku/cell'
 
 describe Sudoku::Board do
   let :board do
